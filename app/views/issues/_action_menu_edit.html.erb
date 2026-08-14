@@ -5,11 +5,9 @@
 <% if @issue.editable? %>
   <div id="update" style="display:none;"
        data-lazy-edit="1"
-       data-lazy-edit-url="<%= lazy_edit_issue_form_path(@issue) %>"
+       data-lazy-mode="attributes"
        data-lazy-loaded="0">
     <h3><%= l(:button_edit) %></h3>
-    <div id="fibrazo-lazy-edit-slot" class="fibrazo-lazy-edit-slot">
-      <p class="nodata" style="display:none;" id="fibrazo-lazy-edit-loading">Cargando formulario…</p>
-    </div>
+    <%= render :partial => 'edit_fast' %>
   </div>
 <% end %>
