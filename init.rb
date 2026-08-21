@@ -4,7 +4,7 @@ Redmine::Plugin.register :fibrazo_issue_perf do
   name 'Fibrazo Issue Perf'
   author 'Fibrazo'
   description 'Split lazy-load: notes+attachments on show (native paste); attributes/CFs via AJAX'
-  version '0.2.1'
+  version '0.2.2'
   requires_redmine version_or_higher: '5.0.0'
 end
 
