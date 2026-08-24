@@ -18,3 +18,5 @@ Rails.application.config.after_initialize do
 rescue StandardError
   nil
 end
+
+require_relative 'lib/fibrazo_issue_perf/default_sort_patch'
