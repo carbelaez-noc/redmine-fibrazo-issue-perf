@@ -21,7 +21,11 @@ module FibrazoIssuePerf
             "[fibrazo_issue_perf] fast_csv_export user=#{User.current&.id} " \
             "count=#{@query.issue_count} cols=#{Array(@query.column_names).size} fmt=#{fmt}"
           )
-          return send_fast_csv_export!(@query)
+          begin
+            return send_fast_csv_export!(@query)
+          rescue NameError, StandardError => e
+            Rails.logger.error("[fibrazo_issue_perf] fast_csv FAILED: " + e.class.to_s + " " + e.message.to_s[0, 200])
+          end
         end
       end
 
@@ -116,12 +120,9 @@ module FibrazoIssuePerf
       send_data body,
                 type: "text/csv; charset=utf-8",
                 disposition: ContentDisposition.format(disposition: "attachment", filename: filename)
-    rescue NameError
-      # ContentDisposition may be unavailable in older stacks
-      send_data body,
-                type: "text/csv; charset=utf-8",
-                filename: filename,
-                disposition: "attachment"
+    rescue NameError => e
+      Rails.logger.error("[fibrazo_issue_perf] fast_csv NameError at send: " + e.class.to_s + " " + e.message.to_s[0, 200])
+      raise
     end
 
     def resolve_export_query_id
