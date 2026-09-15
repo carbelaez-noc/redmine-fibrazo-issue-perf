@@ -77,6 +77,17 @@ module FibrazoIssuePerf
 
     def send_fast_csv_export!(query)
       columns = query.columns
+      bad = []
+      columns = columns.reject do |c|
+        begin
+          c.caption.to_s
+          false
+        rescue NameError, StandardError => e
+          bad << [c.name.to_s, e.class.to_s].join(":")
+          true
+        end
+      end
+      Rails.logger.warn("[fibrazo_issue_perf] fast_csv columnas excluidas: " + bad.join(", ")) if bad.any?
       issue_ids = query.issue_ids
       export_limit = Setting.issues_export_limit.to_i
       export_limit = 10_000 if export_limit <= 0
@@ -104,13 +115,17 @@ module FibrazoIssuePerf
           issue = issues_by_id[iid]
           next unless issue
           out << columns.map do |c|
-            raw =
-              if c.respond_to?(:custom_field)
-                cv_map[iid][c.custom_field.id].to_s
-              else
-                csv_value_fast(c, issue, c.value(issue))
-              end
-            raw.to_s.encode("UTF-8", invalid: :replace, undef: :replace)
+            begin
+              raw =
+                if c.respond_to?(:custom_field)
+                  cv_map[iid][c.custom_field.id].to_s
+                else
+                  csv_value_fast(c, issue, c.value(issue))
+                end
+              raw.to_s.encode("UTF-8", invalid: :replace, undef: :replace)
+            rescue NameError, StandardError
+              ""
+            end
           end
         end
       end
