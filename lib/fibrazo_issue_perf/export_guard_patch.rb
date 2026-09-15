@@ -134,7 +134,8 @@ module FibrazoIssuePerf
       Rails.logger.info("[fibrazo_issue_perf] fast_csv_filename=#{filename}")
       send_data body,
                 type: "text/csv; charset=utf-8",
-                disposition: ContentDisposition.format(disposition: "attachment", filename: filename)
+                filename: filename,
+                disposition: "attachment"
     rescue NameError => e
       Rails.logger.error("[fibrazo_issue_perf] fast_csv NameError at send: " + e.class.to_s + " " + e.message.to_s[0, 200])
       raise
