@@ -2,7 +2,8 @@
 
 module FibrazoIssuePerf
   module AdminOnlyQueriesPatch
-    ADMIN_ONLY_QUERY_IDS = [16].freeze
+    # 16 = Bandeja Comparar Odoo I&M; 17 = Issues sin partner (antes sin filtro estado)
+    ADMIN_ONLY_QUERY_IDS = [16, 17].freeze
 
     module ClassMethods
       def visible(*args)

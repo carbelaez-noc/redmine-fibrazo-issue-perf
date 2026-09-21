@@ -23,6 +23,16 @@ module FibrazoIssuePerf
 
       render partial: 'form', layout: false
     end
+
+    # Bypass opcional: solo admin + allow_closed=1 (auditoría puntual).
+    def index
+      if User.current.admin? && params[:allow_closed].to_s == '1'
+        ::RequestStore.store[:fibrazo_allow_closed_listings] = true if defined?(::RequestStore)
+      end
+      super
+    ensure
+      ::RequestStore.store[:fibrazo_allow_closed_listings] = nil if defined?(::RequestStore)
+    end
   end
 end
 

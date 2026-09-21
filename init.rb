@@ -3,14 +3,15 @@
 Redmine::Plugin.register :fibrazo_issue_perf do
   name 'Fibrazo Issue Perf'
   author 'Fibrazo'
-  description 'Split lazy-load + export guard (evita 504/ALB 60s en XLSX masivos)'
-  version '0.2.7'
+  description 'Split lazy-load + export guard + open-only listings (sin cerrados en index/API)'
+  version '0.2.8'
   requires_redmine version_or_higher: '5.0.0'
 end
 
 require_relative 'lib/fibrazo_issue_perf/asset_sync'
 require_relative 'lib/fibrazo_issue_perf/hooks'
 require_relative 'lib/fibrazo_issue_perf/issues_controller_patch'
+require_relative 'lib/fibrazo_issue_perf/open_only_listings_patch'
 
 Rails.application.config.after_initialize do
   Rails.application.config.assets.precompile += %w[fibrazo_lazy_edit.js fibrazo_export_filename.js]
